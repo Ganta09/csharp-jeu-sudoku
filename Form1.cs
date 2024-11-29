@@ -2,8 +2,10 @@ namespace sudoku_v1
 {
     public partial class Form1 : Form
     {
-        private Sudoku sudoku; // Déclaration de sudoku au niveau de la classe
-
+        private Sudoku sudoku; 
+        private TextBox errorTextBox;
+        bool correct;
+        byte errorCount = 0;
         public Form1()
         {
             InitializeComponent();
@@ -21,6 +23,8 @@ namespace sudoku_v1
             // Affichage dans la console
             sudoku.DisplayInPanel(sudoku_grille);
             CreateNumberButtons();
+            CreateErrorTextBox(); // Ajout de la TextBox pour les erreurs
+
 
         }
         private void CreateNumberButtons()
@@ -51,10 +55,62 @@ namespace sudoku_v1
                 this.Controls.Add(numberButton);
             }
         }
-
+        private void CreateErrorTextBox()
+        {
+            errorTextBox = new TextBox
+            {
+                Text = "Erreurs : 0",
+                Width = 200,
+                Height = 30,
+                Location = new Point(10, 560), // Position en dessous de la grille
+                Font = new Font("Roboto", 12, FontStyle.Bold),
+                ReadOnly = true, // Empêche l'édition par l'utilisateur
+                TextAlign = HorizontalAlignment.Center,
+                BackColor = Color.FromArgb(223, 230, 233)
+            };
+            this.Controls.Add(errorTextBox);
+        }
         private void OnNumberButtonClick(int number)
         {
-            sudoku.HandleNumberInput(number, sudoku_grille);
+           correct = sudoku.HandleNumberInput(number, sudoku_grille);
+            if (!correct)
+            {
+                errorCount++; // Incrémente le compteur d'erreurs
+                errorTextBox.Text = $"Erreurs : {errorCount}";
+
+                if (errorCount >= 3)
+                {
+                    ShowGameOverDialog(); // Affiche la fenêtre de défaite
+                }
+            }
+        }
+        private void ShowGameOverDialog()
+        {
+            DialogResult result = MessageBox.Show(
+                "Vous avez perdu ! Voulez-vous réessayer ou quitter ?",
+                "Défaite",
+                MessageBoxButtons.RetryCancel,
+                MessageBoxIcon.Information
+            );
+
+            if (result == DialogResult.Retry)
+            {
+                Reset(); // Réinitialise le jeu
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                this.Close(); // Ferme l'application
+            }
+        }
+        private void Reset()
+        {
+            errorCount = 0;
+            errorTextBox.Text = "Erreurs : 0";
+
+            sudoku = new Sudoku();
+            sudoku.GenerateFullGrid();
+            sudoku.HideCellsForPuzzle();
+            sudoku.DisplayInPanel(sudoku_grille);
         }
     }
 }

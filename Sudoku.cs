@@ -182,15 +182,14 @@ namespace sudoku_v1
                         selectedCell.BackColor = Color.FromArgb(223, 230, 233);
                     }
                 }
-
-                // Surligner la cellule cliquée
-                clickedCell.BackColor = Color.FromArgb(18, 137, 167);
-
+                if (!errorCells.Contains((cellInfo.Row, cellInfo.Col)))
+                {
+                    // Surligner la cellule cliquée uniquement si elle n'est pas marquée en rouge
+                    clickedCell.BackColor = Color.FromArgb(18, 137, 167);
+                }
                 // Mémoriser la cellule sélectionnée
                 selectedCell = clickedCell;
 
-                // Récupérer les coordonnées de la cellule
-                Console.WriteLine($"Case sélectionnée : Ligne {cellInfo.Row + 1}, Colonne {cellInfo.Col + 1}");
             }
         }
 
@@ -247,7 +246,7 @@ namespace sudoku_v1
                  selectedCell = clickedCell;
              }
          }*/
-        public void HandleNumberInput(int number, Panel panel)
+        public bool HandleNumberInput(int number, Panel panel)
         {
             if (selectedCell != null)
             {
@@ -264,8 +263,11 @@ namespace sudoku_v1
                     selectedCell.BackColor = Color.LightGreen; // Surligner en vert
                     errorCells.Remove((row, col)); // Retirer de la liste des erreurs si corrigé
 
+
                     // Marquer la cellule comme immuable
                     selectedCell.Tag = new { Row = row, Col = col, IsMutable = false };
+                    return true; // Bonne réponse
+
                 }
                 else
                 {
@@ -275,8 +277,12 @@ namespace sudoku_v1
                     {
                         errorCells.Add((row, col)); // Ajouter à la liste des erreurs
                     }
+                    return false; // Mauvaise réponse
+
                 }
             }
+            return false; // Mauvaise réponse
+
         }
 
 

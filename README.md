@@ -14,10 +14,11 @@ Ce projet est une application Sudoku développée en C# avec WinForms, utilisant
 - **Indications visuelles** :
   - Rouge : saisie incorrecte.
   - Vert : saisie correcte.
-
+  - Compteur d'erreurs implémentés (v1.2)
+  - Ecran de Game Over en cas de défaite (v1.2) 
+  
 ## Fonctionnalités à Implémenter
 
-- Compteur d'erreurs pour suivre les tentatives incorrectes.
 - Gestion des victoires pour signaler la fin de la partie.
 - Ajout de plusieurs niveaux de difficulté (facile, moyen, difficile).
 - Amélioration de l'interface utilisateur pour une meilleure expérience.
